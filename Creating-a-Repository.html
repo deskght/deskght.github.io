@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Creating a Repository with GitHub Desktop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Step-by-step guide to creating a repository, working with commits, branches, and GitHub synchronization using GitHub Desktop.">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-elevated: #020617;
+            --bg-elevated-soft: #020617;
+            --content-bg: #f9fafb;
+            --card-bg: #ffffff;
+            --card-bg-soft: #f1f5f9;
+            --border: #cbd5f5;
+            --border-strong: #818cf8;
+            --fg: #020617;
+            --muted: #6b7280;
+            --accent: #4f46e5;
+            --accent-soft: rgba(79, 70, 229, 0.08);
+            --accent-strong: #6366f1;
+            --warning-bg: #fef9c3;
+            --warning-border: #facc15;
+            --code-bg: #020617;
+            --step-circle-bg: #eef2ff;
+            --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.45);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1d2545 0, #020617 45%, #020617 100%);
+            color: var(--fg);
+        }
+
+        /* Top shell */
+        .shell {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 0 1rem 3rem;
+        }
+
+        header.site-header {
+            padding: 1rem 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #e5e7eb;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 14px;
+            background: radial-gradient(circle at 25% 25%, #a5b4fc, #4f46e5 55%, #1d253f 100%);
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.7);
+            position: relative;
+        }
+
+        .logo::after {
+            content: "";
+            position: absolute;
+            inset: 7px;
+            border-radius: 10px;
+            border: 2px solid rgba(248, 250, 252, 0.9);
+        }
+
+        .brand-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: 0.02em;
+        }
+
+        nav.top-nav {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        nav.top-nav a {
+            color: inherit;
+            text-decoration: none;
+            position: relative;
+        }
+
+        nav.top-nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #38bdf8);
+            transition: width 0.18s ease-out;
+        }
+
+        nav.top-nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
+            gap: 2rem;
+            align-items: center;
+            padding: 2rem 0 2.5rem;
+            color: #e5e7eb;
+        }
+
+        .hero-left h1 {
+            font-size: clamp(2rem, 3vw, 2.6rem);
+            margin: 0 0 0.8rem;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(120deg, #e5e7eb, #a5b4fc, #7dd3fc);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero-left p {
+            margin: 0.3rem 0 1.2rem;
+            max-width: 36rem;
+            color: #cbd5f5;
+            font-size: 0.98rem;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.18rem 0.6rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: #cbd5f5;
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .tag-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #4ade80;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .btn {
+            border-radius: 999px;
+            padding: 0.65rem 1.1rem;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: radial-gradient(circle at 20% 0, #a5b4fc 0, #4f46e5 40%, #1e293b 100%);
+            color: #f9fafb;
+            box-shadow: 0 14px 35px rgba(55, 65, 194, 0.85);
+        }
+
+        .btn-primary span.icon {
+            font-size: 1.05rem;
+        }
+
+        .btn-outline {
+            background: rgba(15, 23, 42, 0.7);
+            border-color: rgba(148, 163, 184, 0.7);
+            color: #e5e7eb;
+        }
+
+        .hero-meta {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .hero-right {
+            position: relative;
+        }
+
+        .hero-panel {
+            background: radial-gradient(circle at 0 0, #1d243f 0, #020617 55%);
+            border-radius: 18px;
+            border: 1px solid rgba(129, 140, 248, 0.7);
+            box-shadow: var(--shadow-soft);
+            padding: 1.1rem 1rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            opacity: 0.16;
+            background:
+                radial-gradient(circle at 0 20%, rgba(167, 139, 250, 0.9) 0, transparent 60%),
+                radial-gradient(circle at 80% 0, rgba(56, 189, 248, 0.85) 0, transparent 65%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .hero-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #e5e7eb;
+            margin-bottom: 0.6rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.7);
+        }
+
+        .dot.red { background: #f97373; }
+        .dot.yellow { background: #facc15; }
+        .dot.green { background: #4ade80; }
+
+        .mini-badges {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .mini-badge {
+            border-radius: 999px;
+            padding: 0.14rem 0.5rem;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.7rem;
+        }
+
+        .hero-panel-body {
+            background: rgba(15, 23, 42, 0.92);
+            border-radius: 12px;
+            padding: 0.7rem 0.7rem 0.85rem;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.75rem;
+            color: #e5e7eb;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-panel-body .comment {
+            color: #9ca3af;
+        }
+
+        .hero-panel-body .kw {
+            color: #a5b4fc;
+        }
+
+        .hero-panel-body .fn {
+            color: #38bdf8;
+        }
+
+        .hero-panel-body .opt {
+            color: #f97316;
+        }
+
+        .hero-panel-body .str {
+            color: #facc15;
+        }
+
+        .hero-panel-footer {
+            margin-top: 0.6rem;
+            font-size: 0.74rem;
+            color: #9ca3af;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-panel-timeline {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .timeline-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(248, 250, 252, 0.85);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .timeline-dot.active {
+            background: #a5b4fc;
+        }
+
+        /* Main layout */
+        .main-layout {
+            background: var(--content-bg);
+            border-radius: 24px;
+            box-shadow: 0 26px 60px rgba(15, 23, 42, 0.55);
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            gap: 1.5rem;
+            padding: 1.6rem 1.6rem 1.9rem;
+            position: relative;
+        }
+
+        .main-layout::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(130deg, rgba(129, 140, 248, 0.7), rgba(56, 189, 248, 0.6), rgba(248, 250, 252, 0.2));
+            -webkit-mask:
+                linear-gradient(#000 0 0) content-box,
+                linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        aside.sidebar {
+            position: relative;
+            padding-right: 0.5rem;
+        }
+
+        .sidebar-inner {
+            position: sticky;
+            top: 1rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .toc {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .toc li {
+            margin-bottom: 0.2rem;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #4b5563;
+            padding: 0.35rem 0.55rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .toc a span.index {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #6b7280;
+            background: #f9fafb;
+        }
+
+        .toc a:hover,
+        .toc a.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .toc a:hover span.index,
+        .toc a.active span.index {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #eef2ff;
+        }
+
+        .sidebar-tip {
+            background: var(--card-bg-soft);
+            border-radius: 14px;
+            padding: 0.75rem 0.75rem 0.7rem;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            font-size: 0.86rem;
+            color: #4b5563;
+        }
+
+        .sidebar-tip strong {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: #6b7280;
+        }
+
+        .sidebar-tip p {
+            margin: 0.3rem 0 0;
+        }
+
+        /* Content */
+        main.article {
+            position: relative;
+            z-index: 1;
+        }
+
+        article.content-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 1.5rem 1.5rem 1.4rem;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+        }
+
+        article.content-card h2 {
+            font-size: 1.25rem;
+            margin: 0 0 0.8rem;
+        }
+
+        article.content-card h3 {
+            font-size: 1.05rem;
+            margin-top: 1.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        article.content-card p {
+            margin: 0.35rem 0 0.6rem;
+            font-size: 0.96rem;
+            color: #111827;
+        }
+
+        article.content-card ul,
+        article.content-card ol {
+            margin: 0.3rem 0 0.9rem;
+            padding-left: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        article.content-card li {
+            margin-bottom: 0.25rem;
+        }
+
+        a {
+            color: var(--accent-strong);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .hint,
+        .note {
+            border-radius: 12px;
+            padding: 0.8rem 0.85rem;
+            font-size: 0.9rem;
+            margin: 0.75rem 0;
+            border-left: 3px solid;
+        }
+
+        .hint {
+            background: var(--accent-soft);
+            border-color: var(--accent-strong);
+        }
+
+        .note {
+            background: var(--warning-bg);
+            border-color: var(--warning-border);
+        }
+
+        .step-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.3rem;
+            margin-top: 0.6rem;
+        }
+
+        .step-card {
+            border-radius: 16px;
+            padding: 1rem 0.95rem 0.95rem;
+            background: var(--card-bg-soft);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(130deg, rgba(129, 140, 248, 0.2), transparent 35%, transparent 65%, rgba(56, 189, 248, 0.15));
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .step-card-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-heading {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .step-circle {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: var(--step-circle-bg);
+            border: 1px solid rgba(129, 140, 248, 0.9);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4f46e5;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 0.98rem;
+            color: #111827;
+        }
+
+        .step-subtitle {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .step-card ol {
+            margin-bottom: 0;
+        }
+
+        code {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .footer-note {
+            margin-top: 1.2rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            border-top: 1px dashed rgba(148, 163, 184, 0.6);
+            padding-top: 0.7rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .hero {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .hero-right {
+                order: -1;
+            }
+
+            .main-layout {
+                grid-template-columns: minmax(0, 1fr);
+                padding: 1.4rem 1.3rem 1.6rem;
+            }
+
+            aside.sidebar {
+                padding-right: 0;
+            }
+
+            .sidebar-inner {
+                position: static;
+                margin-bottom: 0.6rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                padding: 0 0.75rem 2.4rem;
+            }
+
+            header.site-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.4rem;
+            }
+
+            nav.top-nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 1.6rem 0 2rem;
+            }
+
+            .main-layout {
+                padding: 1.1rem;
+            }
+
+            article.content-card {
+                padding: 1.2rem 1.05rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="shell">
+    <header class="site-header">
+        <div class="brand">
+            <div class="logo"></div>
+            <div class="brand-title">GitHub Desktop Guide</div>
+        </div>
+        <nav class="top-nav">
+            <a href="#overview">Overview</a>
+            <a href="#step-1">Create data file</a>
+            <a href="#step-4">Publish to GitHub</a>
+            <a href="#step-6">Fetch &amp; pull</a>
+        </nav>
+    </header>
+
+    <!-- Hero section -->
+    <section class="hero" id="overview">
+        <div class="hero-left">
+            <div class="pill-row">
+                <div class="tag">
+                    <span class="tag-dot"></span>
+                    GitHub Desktop
+                </div>
+                <div class="tag">Git without terminal</div>
+                <div class="tag">Beginner friendly</div>
+            </div>
+
+            <h1>
+                <span class="hero-gradient">Creating a Repository with GitHub Desktop</span>
+            </h1>
+            <p>
+                A practical mini-course that walks you through creating a repository, committing changes,
+                working with branches, and synchronizing with GitHub — all without touching the command line.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#step-1" class="btn btn-primary">
+                    <span class="icon">▶</span>
+                    Start from Step 1
+                </a>
+                <a href="#step-6" class="btn btn-outline">
+                    Jump to fetch &amp; pull
+                </a>
+            </div>
+
+            <div class="hero-meta">
+                Approx. 20–30 minutes • You only need GitHub Desktop and a GitHub account
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-panel" aria-hidden="true">
+                <div class="hero-panel-header">
+                    <div class="traffic-lights">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="mini-badges">
+                        <div class="mini-badge">main ●</div>
+                        <div class="mini-badge">Working directory clean</div>
+                    </div>
+                </div>
+                <div class="hero-panel-body">
+                    <div class="comment"># Example Git workflow without terminal</div>
+                    <div><span class="kw">open</span> <span class="fn">GitHub Desktop</span></div>
+                    <div><span class="kw">click</span> <span class="opt">"Create New Repository"</span></div>
+                    <div><span class="kw">drag</span> <span class="opt">csv_file</span> <span class="kw">into</span> <span class="opt">repo folder</span></div>
+                    <div><span class="kw">write</span> <span class="str">"Add sample CSV data"</span> <span class="kw">as</span> commit message</div>
+                    <div><span class="kw">press</span> <span class="opt">Commit</span></div>
+                    <div><span class="kw">hit</span> <span class="opt">Publish repository</span> <span class="kw">→</span> project is online</div>
+                </div>
+                <div class="hero-panel-footer">
+                    <span>Visual Git workflow</span>
+                    <div class="hero-panel-timeline">
+                        <div class="timeline-dot active"></div>
+                        <div class="timeline-dot active"></div>
+                        <div class="timeline-dot active"></div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main content with sidebar -->
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-title">On this page</div>
+                <ul class="toc">
+                    <li><a href="#step-1" class="active"><span class="index">1</span> Prepare a CSV data file</a></li>
+                    <li><a href="#step-2"><span class="index">2</span> Create a local repository</a></li>
+                    <li><a href="#step-3"><span class="index">3</span> First commit</a></li>
+                    <li><a href="#step-4"><span class="index">4</span> Publish to GitHub</a></li>
+                    <li><a href="#step-5"><span class="index">5</span> Branches &amp; changes</a></li>
+                    <li><a href="#step-6"><span class="index">6</span> Fetch vs pull</a></li>
+                    <li><a href="#summary"><span class="index">✓</span> Summary</a></li>
+                </ul>
+
+                <div class="sidebar-tip">
+                    <strong>Tip</strong>
+                    <p>
+                        Keep this page open while you work in GitHub Desktop. The steps are written so you can follow
+                        them in order without switching between tools too often.
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="article">
+            <article class="content-card">
+                <h2 id="step-1">Step 1. Prepare a sample CSV file</h2>
+                <p>
+                    First, you’ll create a small data file that will be tracked by Git. A simple CSV file is perfect for this.
+                </p>
+
+                <div class="step-grid">
+                    <section class="step-card">
+                        <div class="step-card-inner">
+                            <div class="step-heading">
+                                <div class="step-circle">1</div>
+                                <div>
+                                    <div class="step-title">Create a small table</div>
+                                    <div class="step-subtitle">Any spreadsheet editor will do</div>
+                                </div>
+                            </div>
+                            <ol>
+                                <li>Create a table in Excel, LibreOffice Calc, Google Sheets, or another editor.</li>
+                                <li>Fill it with dummy data: numbers, dates, categories — anything that looks like a small dataset.</li>
+                                <li>Keep it small and readable (a few dozen rows are enough).</li>
+                            </ol>
+                        </div>
+                    </section>
+
+                    <section class="step-card">
+                        <div class="step-card-inner">
+                            <div class="step-heading">
+                                <div class="step-circle">2</div>
+                                <div>
+                                    <div class="step-title">Export as CSV</div>
+                                    <div class="step-subtitle">GitHub renders CSV nicely</div>
+                                </div>
+                            </div>
+                            <ol>
+                                <li>Export or save the table as a <strong>CSV</strong> file.</li>
+                                <li>Choose comma as the separator if the editor asks.</li>
+                                <li>Name it something like <code>sample-data.csv</code>.</li>
+                            </ol>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="note">
+                    <strong>Check the file format:</strong> the extension should be <code>.csv</code>, not <code>.xlsx</code>
+                    or another native spreadsheet format. This allows GitHub to preview the table directly in the browser.
+                </div>
+
+                <h2 id="step-2">Step 2. Create a local repository in GitHub Desktop</h2>
+                <p>
+                    Next, you’ll create a new Git repository on your computer using the GitHub Desktop interface.
+                </p>
+
+                <section class="step-card">
+                    <div class="step-card-inner">
+                        <div class="step-heading">
+                            <div class="step-circle">3</div>
+                            <div>
+                                <div class="step-title">New repository on your hard drive</div>
+                                <div class="step-subtitle">No terminal required</div>
+                            </div>
+                        </div>
+                        <ol>
+                            <li>Open <strong>GitHub Desktop</strong>.</li>
+                            <li>In the menu, choose <em>“Create a New Repository on your Hard Drive…”</em>.</li>
+                            <li>Fill in:
+                                <ul>
+                                    <li>a repository name (for example, <code>csv-demo</code>);</li>
+                                    <li>a local folder where the repository will live;</li>
+                                    <li>an optional description if you like.</li>
+                                </ul>
+                            </li>
+                            <li>Confirm the creation of the repository.</li>
+                        </ol>
+                        <p>
+                            At this point, the repository exists <strong>only locally</strong> on your computer. It is not yet
+                            connected to GitHub.
+                        </p>
+                    </div>
+                </section>
+
+                <h2 id="step-3">Step 3. Add the CSV file and make your first commit</h2>
+                <p>
+                    Now you’ll add your data file to the repository and record the change in Git using a commit.
+                </p>
+
+                <section class="step-card">
+                    <div class="step-card-inner">
+                        <div class="step-heading">
+                            <div class="step-circle">4</div>
+                            <div>
+                                <div class="step-title">Track your data with Git</div>
+                                <div class="step-subtitle">From untracked file to committed change</div>
+                            </div>
+                        </div>
+                        <ol>
+                            <li>Move or copy your CSV file into the repository folder you just created.</li>
+                            <li>
+                                Switch back to GitHub Desktop — it should now show new changes
+                                (the file will appear as an untracked or modified file).
+                            </li>
+                            <li>
+                                In the <em>Summary</em> field, type a message such as
+                                <em>“Add sample CSV data”</em>.
+                            </li>
+                            <li>Click the <strong>Commit</strong> button to create your first commit.</li>
+                        </ol>
+                        <p>
+                            The current state of your project is now stored in Git history as a commit and can be referenced
+                            or reverted later.
+                        </p>
+                    </div>
+                </section>
+
+                <h2 id="step-4">Step 4. Publish the repository to GitHub</h2>
+                <p>
+                    Time to put the repository online so that you (and optionally others) can access it from any device.
+                </p>
+
+                <section class="step-card">
+                    <div class="step-card-inner">
+                        <div class="step-heading">
+                            <div class="step-circle">5</div>
+                            <div>
+                                <div class="step-title">Create the remote repository</div>
+                                <div class="step-subtitle">Your local repo goes to GitHub</div>
+                            </div>
+                        </div>
+                        <ol>
+                            <li>In GitHub Desktop, open the <em>History</em> tab and confirm that your commit is listed.</li>
+                            <li>Click the <strong>Publish repository</strong> button.</li>
+                            <li>Choose:
+                                <ul>
+                                    <li>visibility: <strong>Public</strong> or <strong>Private</strong>;</li>
+                                    <li>a repository name on GitHub (change it if a repo with that name already exists).</li>
+                                </ul>
+                            </li>
+                            <li>Confirm the publication. GitHub Desktop will create a remote repository and push your commits.</li>
+                            <li>When it finishes, use the link in GitHub Desktop to open the repository in your browser.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <h2 id="step-5">Step 5. Create a branch, edit the file, and share the branch</h2>
+                <p>
+                    Branches let you work on changes safely, without disturbing the main version of your project.
+                </p>
+
+                <section class="step-card">
+                    <div class="step-card-inner">
+                        <div class="step-heading">
+                            <div class="step-circle">6</div>
+                            <div>
+                                <div class="step-title">Experiment in a feature branch</div>
+                                <div class="step-subtitle">Keep the main branch clean</div>
+                            </div>
+                        </div>
+                        <ol>
+                            <li>Edit your CSV file locally: add a few extra rows or modify existing data.</li>
+                            <li>Look at the diff in GitHub Desktop to see how the file has changed line-by-line.</li>
+                            <li>Create a new branch (for example, <code>feature/update-data</code>).</li>
+                            <li>
+                                When prompted, choose the option to bring your current changes into the new branch
+                                (often worded as “Bring my changes to the new branch”).
+                            </li>
+                            <li>Create a commit in this new branch with a message describing what changed.</li>
+                            <li>Publish the branch to GitHub so others can see and review your changes.</li>
+                        </ol>
+                        <div class="hint">
+                            <strong>Why branches matter:</strong><br>
+                            Branches let you experiment and develop features separately from the main branch.
+                            Once the changes are tested and reviewed, they can be merged back into the main branch.
+                        </div>
+                    </div>
+                </section>
+
+                <h2 id="step-6">Step 6. Getting updates from GitHub: fetch and pull</h2>
+                <p>
+                    Imagine that you (or a teammate) edited the CSV file directly on GitHub, using the web interface.
+                    Your local repository now needs to catch up.
+                </p>
+
+                <section class="step-card">
+                    <div class="step-card-inner">
+                        <div class="step-heading">
+                            <div class="step-circle">7</div>
+                            <div>
+                                <div class="step-title">See remote changes with fetch</div>
+                                <div class="step-subtitle">Check what’s new before applying it</div>
+                            </div>
+                        </div>
+                        <ol>
+                            <li>Open the repository on <strong>github.com</strong> and edit the CSV file in the browser.</li>
+                            <li>Commit the change to the <code>master</code> or <code>main</code> branch.</li>
+                            <li>In GitHub Desktop, switch to the same branch (<code>master</code>/<code>main</code>).</li>
+                            <li>Click <strong>Fetch origin</strong> to check for new commits on the remote.</li>
+                            <li>Compare history on GitHub and in GitHub Desktop: after a fetch, GitHub Desktop knows about remote commits but your local files are not changed yet.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="step-card">
+                    <div class="step-card-inner">
+                        <div class="step-heading">
+                            <div class="step-circle">8</div>
+                            <div>
+                                <div class="step-title">Apply the changes with pull</div>
+                                <div class="step-subtitle">Keep your local copy in sync</div>
+                            </div>
+                        </div>
+                        <ol>
+                            <li>Click <strong>Pull origin</strong> in GitHub Desktop.</li>
+                            <li>
+                                GitHub Desktop will download the new commits and merge them into your current branch,
+                                updating your local files.
+                            </li>
+                            <li>Open the <em>History</em> tab in GitHub Desktop to confirm that the new commits are now part of your local history.</li>
+                        </ol>
+                        <div class="note">
+                            <strong>Fetch vs pull:</strong><br>
+                            <strong>Fetch</strong> only retrieves information about new commits from the server; it doesn’t
+                            change your working files.<br>
+                            <strong>Pull</strong> = fetch + apply the changes to your current branch (by merging or using
+                            another update strategy).
+                        </div>
+                    </div>
+                </section>
+
+                <h2 id="summary">Summary</h2>
+                <p>
+                    With GitHub Desktop, you can:
+                </p>
+                <ul>
+                    <li>create local repositories and link them to GitHub;</li>
+                    <li>add files and record changes as commits;</li>
+                    <li>create and publish branches for safe experimentation and collaboration;</li>
+                    <li>push your work to GitHub and stay in sync using fetch and pull.</li>
+                </ul>
+
+                <p>
+                    As you get more comfortable with Git, you can perform the same actions in the terminal with commands like
+                    <code>git add sample-data.csv</code> and <code>git commit</code>. Still, the graphical interface
+                    remains a powerful and convenient way to understand and visualize what’s happening, especially when you’re
+                    just getting started.
+                </p>
+
+                <div class="footer-note">
+                    This page is inspired by the tutorial
+                    “GitHub without the command line: Creating repositories using GitHub Desktop”
+                    from the CodeRefinery project, rewritten and adapted into a standalone guide.
+                </div>
+            </article>
+        </main>
+    </div>
+</div>
+</body>
+</html>
